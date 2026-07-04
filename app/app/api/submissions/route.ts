@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server"
 import { sql } from "../../../lib/db"
 import { submitForGrading } from "../../../lib/grading-client"
+import { gradeInProcess } from "../../../lib/grade"
 import type { RubricCriterion } from "@goblins/shared"
 
 export const runtime = "nodejs"
+export const maxDuration = 60 // serverless in-process grading awaits the model call (~2.6s)
 
 export async function POST(req: Request) {
   const { studentId, problemId, imageDataUrl } = (await req.json()) as {
@@ -28,12 +30,21 @@ export async function POST(req: Request) {
     RETURNING id
   `
 
-  await submitForGrading({
+  const job = {
     submissionId: submission!.id,
     rubric: { criteria: problem.criteria ?? [], maxPoints: problem.max_points ?? 10, editedByTeacher: false },
     imageDataUrl,
     problemPrompt: problem.prompt,
-  })
+  }
+
+  if (process.env.GRADING_SERVICE_URL) {
+    // Local/production two-service topology: enqueue on the standalone Effect
+    // grading service (the queue absorbs the spike); the client polls for the score.
+    await submitForGrading(job)
+  } else {
+    // Serverless (Vercel) path: grade in-process and persist before responding.
+    await gradeInProcess(job).catch(() => {}) // failures are reflected in submission.status
+  }
 
   return NextResponse.json({ submissionId: submission!.id })
 }

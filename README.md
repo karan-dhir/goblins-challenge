@@ -1,5 +1,7 @@
 # Goblins Auto-Grader
 
+**▶ Live:** https://goblins-autograder.vercel.app · **Repo:** https://github.com/karan-dhir/goblins-challenge
+
 A "growth product" for Goblins: teachers create an assignment, students show their work on a whiteboard, and
 it's **graded instantly by AI**. Real-time feedback is intentionally *off* (this is the auto-grader) — students
 see a score, teachers see a live grades report. No sign-up; everything persists across devices.
