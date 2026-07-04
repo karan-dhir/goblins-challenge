@@ -1,0 +1,12 @@
+{
+  "name": "goblins-autograder",
+  "private": true,
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "migrate": "pnpm --filter @goblins/db migrate",
+    "service": "pnpm --filter @goblins/grading-service dev",
+    "app": "pnpm --filter @goblins/app dev",
+    "load": "bash load/scale.sh",
+    "build": "pnpm -r build"
+  }
+}

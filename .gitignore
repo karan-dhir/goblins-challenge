@@ -1,0 +1,19 @@
+# secrets — never commit
+.env
+.env.local
+*.key
+
+# deps / build
+node_modules/
+.next/
+dist/
+.turbo/
+.vercel/
+
+# load test artifacts
+load/results/
+
+# os/editor
+.DS_Store
+.idea/
+.vscode/

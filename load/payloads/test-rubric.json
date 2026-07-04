@@ -1,0 +1,9 @@
+{
+  "criteria": [
+    { "label": "Method", "points": 5, "descriptor": "Shows correct algebraic steps to isolate x." },
+    { "label": "Answer", "points": 3, "descriptor": "Arrives at x = 4." },
+    { "label": "Clarity", "points": 2, "descriptor": "Work is legible and organized." }
+  ],
+  "maxPoints": 10,
+  "editedByTeacher": false
+}

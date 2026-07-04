@@ -1,0 +1,10 @@
+{
+  "active": true,
+  "skill_name": "ralplan",
+  "session_id": "afe8aecb-aab6-40fa-a810-ce526eec4b07",
+  "started_at": "2026-06-12T19:08:39.105Z",
+  "last_checked_at": "2026-06-12T19:08:39.105Z",
+  "reinforcement_count": 0,
+  "max_reinforcements": 5,
+  "stale_ttl_ms": 900000
+}

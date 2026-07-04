@@ -1,0 +1,25 @@
+app = "goblins-grading"
+primary_region = "iad"
+
+[build]
+  dockerfile = "grading-service/Dockerfile"
+
+[http_service]
+  internal_port = 3001
+  force_https = true
+  auto_stop_machines = "off"      # keep the queue + workers warm during testing windows
+  min_machines_running = 1
+
+  [[http_service.checks]]
+    method = "GET"
+    path = "/health"
+    interval = "15s"
+    timeout = "3s"
+
+[env]
+  GRADER_MODE = "real"
+  PORT = "3001"
+  WORKER_CONCURRENCY = "5"
+  RATE_LIMIT_RPS = "10"
+  QUEUE_CAPACITY = "200"
+# Secrets (set via `fly secrets set ...`): OPENROUTER_API_KEY, DATABASE_URL, GRADER_MODEL, CORS_ORIGIN

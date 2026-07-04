@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"ls -la && echo \\\"---GIT---\\\" && git status 2>&1 | head -5 && echo \\\"---TOOLS---\\\" && which fly vercel gh node pnpm k6 2>&1 && echo \\\"---GH AUTH---\\\" && gh auth status 2>&1 | head -5\",\"desc...",
+  "error": "Exit code 1\ntotal 0\ndrwxr-xr-x    3 karandhir  staff    96 Jun 12 14:34 .\ndrwxr-xr-x+ 151 karandhir  staff  4832 Jun 12 16:08 ..\ndrwxr-xr-x    5 karandhir  staff   160 Jun 12 15:15 .omc\n---GIT---\nfatal: not a git repository (or any of the parent directories): .git\n---TOOLS---\n/opt/homebrew/bin/fly\n/Users/karandhir/.nvm/versions/node/v22.14.0/bin/vercel\n/opt/homebrew/bin/gh\n/Users/karandhir/.nvm/versions/node/v22.14.0/bin/node\n/Users/karandhir/.nvm/versions/node/v22.14.0/bin/pnpm\nk6 not found",
+  "timestamp": "2026-06-12T20:09:32.848Z",
+  "retry_count": 1
+}
