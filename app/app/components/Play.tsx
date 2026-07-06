@@ -1,9 +1,10 @@
 "use client"
 import { useMemo, useRef, useState } from "react"
 import { Whiteboard, type WhiteboardHandle } from "./Whiteboard"
+import type { CriterionGrade } from "../../lib/shared-types"
 
 type Problem = { id: string; ordinal: number; prompt: string }
-type Result = { score: number; maxPoints: number }
+type Result = { score: number; maxPoints: number; perCriterion?: CriterionGrade[] }
 
 export function Play(props: {
   studentName: string
@@ -42,7 +43,7 @@ export function Play(props: {
         await new Promise((r) => setTimeout(r, 1000))
         const g = await fetch(`/api/grade/${submissionId}`, { cache: "no-store" }).then((r) => r.json())
         if (g.status === "graded" && g.grade) {
-          const result = { score: g.grade.score, maxPoints: g.grade.maxPoints }
+          const result = { score: g.grade.score, maxPoints: g.grade.maxPoints, perCriterion: g.grade.perCriterion }
           setCurrent(result); setDone((d) => ({ ...d, [problem.id]: result })); setPhase("scored")
           return
         }
@@ -80,11 +81,26 @@ export function Play(props: {
       <h2>{problem!.prompt}</h2>
 
       {phase === "scored" && current ? (
-        <div className="card center">
+        <div className="card">
           <div className="big-score">{current.score}/{current.maxPoints}</div>
-          <button className="btn green" onClick={next}>
-            {idx + 1 < problems.length ? "Next problem →" : "Finish 🎉"}
-          </button>
+          {current.perCriterion && current.perCriterion.length > 0 && (
+            <table style={{ margin: "10px 0 16px" }}>
+              <thead><tr><th>Rubric</th><th style={{ width: 70, textAlign: "right" }}>Points</th></tr></thead>
+              <tbody>
+                {current.perCriterion.map((c, i) => (
+                  <tr key={i}>
+                    <td>{c.label}<div className="muted" style={{ fontSize: 12 }}>{c.reasoning}</div></td>
+                    <td style={{ textAlign: "right" }}><span className="score-pill">{c.awarded}/{c.max}</span></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+          <div className="center">
+            <button className="btn green" onClick={next}>
+              {idx + 1 < problems.length ? "Next problem →" : "Finish 🎉"}
+            </button>
+          </div>
         </div>
       ) : (
         <>

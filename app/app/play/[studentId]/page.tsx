@@ -1,5 +1,6 @@
 import { sql } from "../../../lib/db"
 import { Play } from "../../components/Play"
+import type { CriterionGrade } from "../../../lib/shared-types"
 
 export const dynamic = "force-dynamic"
 
@@ -15,13 +16,15 @@ export default async function PlayPage({ params }: { params: Promise<{ studentId
     SELECT id, ordinal, prompt FROM problem WHERE assignment_id = ${student.assignment_id} ORDER BY ordinal
   `
   // Resume support: which problems already have a graded/pending submission.
-  const subs = await sql<{ problem_id: string; status: string; score: number | null; max_points: number | null }[]>`
-    SELECT s.problem_id, s.status, g.score, g.max_points
+  const subs = await sql<{ problem_id: string; status: string; score: number | null; max_points: number | null; per_criterion: unknown }[]>`
+    SELECT s.problem_id, s.status, g.score, g.max_points, g.per_criterion
     FROM submission s LEFT JOIN grade g ON g.submission_id = s.id
     WHERE s.student_id = ${studentId}
   `
-  const done: Record<string, { score: number; maxPoints: number }> = {}
-  for (const s of subs) if (s.status === "graded" && s.score != null) done[s.problem_id] = { score: s.score, maxPoints: s.max_points! }
+  const done: Record<string, { score: number; maxPoints: number; perCriterion?: CriterionGrade[] }> = {}
+  for (const s of subs)
+    if (s.status === "graded" && s.score != null)
+      done[s.problem_id] = { score: s.score, maxPoints: s.max_points!, perCriterion: (s.per_criterion ?? undefined) as CriterionGrade[] | undefined }
 
   return (
     <Play
